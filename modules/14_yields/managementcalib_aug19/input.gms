@@ -10,6 +10,8 @@ $setglobal c14_yields_scenario  cc
 *             nocc      (no climate change)
 *             nocc_hist (no climate change after year defined by sm_fix_cc)
 
+$setglobal c14_ozone_rcp rcp2p6
+
 scalar s14_limit_calib   Relative managament calibration switch (1=limited 0=pure relative) / 1 /;
 
 scalar s14_calib_ir2rf   Switch to calibrate rainfed to irrigated yield ratios (1=calib 0=not calib) / 1 /;
@@ -28,6 +30,8 @@ scalars
 scalars
   s14_carbon_fraction Carbon fraction for conversion of biomass to dry matter (1) / 0.5/
 ;
+
+scalar s14_ozone_yield_shock Switch to include a yield shock due to ozone (1) / 0 /;
 
 
 ******* Calibration factor
@@ -98,4 +102,10 @@ $ondelim
 $include "./modules/14_yields/input/f14_kcr_pollinator_dependence.csv"
 $offdelim
 /
+;
+
+table f14_yield_shock_ozone(t_all,j,rcp,kve) Yield shock due to Ozone (1)
+$ondelim
+$include "./modules/14_yields/input/lpj_yields_ozone.cs3"
+$offdelim
 ;

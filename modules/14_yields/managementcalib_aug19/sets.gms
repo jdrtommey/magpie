@@ -33,5 +33,8 @@ sets
   ncp_type14 natures contributions to people (NCP) relevant for agricultural yields
        / soil_intact, poll_suff /
 
+  rcp14 Ozone yield climate impact
+       / rcp2p6 rcp7p0 /
+
 ;
 
