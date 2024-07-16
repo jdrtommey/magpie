@@ -104,7 +104,7 @@ $offdelim
 /
 ;
 
-table f14_yield_shock_ozone(t_all,j,rcp,kve) Yield shock due to Ozone (1)
+table f14_yield_shock_ozone(t_all,j,rcp14,kve) Yield shock due to Ozone (1)
 $ondelim
 $include "./modules/14_yields/input/lpj_yields_ozone.cs3"
 $offdelim

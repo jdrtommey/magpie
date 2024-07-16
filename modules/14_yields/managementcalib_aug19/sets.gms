@@ -34,7 +34,7 @@ sets
        / soil_intact, poll_suff /
 
   rcp14 Ozone yield climate impact
-       / rcp2p6 rcp7p0 /
+       / rcp2p6, rcp7p0 /
 
 ;
 
