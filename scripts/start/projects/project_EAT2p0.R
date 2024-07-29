@@ -80,6 +80,7 @@ bau <- function(cfg) {
   cfg$gms$c56_pollutant_prices <- "R21M42-SSP2-NPi"      # default
   cfg$path_to_report_bioenergy <- NA
   cfg$gms$c60_2ndgen_biodem    <- "R21M42-SSP2-NPi"      # default
+  cfg$gms$c14_ozone_rcp <- "rcp7p0"
 
   # Climate Change
   cfg$input['cellular'] <- "rev4.109_h12_c6a7458f_cellularmagpie_c200_IPSL-CM6A-LR-ssp370_lpjml-8e6c5eb1.tgz"
@@ -145,7 +146,13 @@ miti <- function(cfg) {
 # Decomposition Scenario. Apply lower climate impacts based on RCP 2.6 to BAU using GFDL climate model.
 rcp26 <- function(cfg) {
   cfg$input["cellular"] <- "rev4.99_h12_05fd702e_cellularmagpie_c200_GFDL-ESM4-ssp126_lpjml-8e6c5eb1.tgz"
+  cfg$gms$c14_ozone_rcp <- "rcp2p6"
   return(cfg)
+}
+
+
+ozoneShock <- function(cfg) {
+  cfg$gms$s14_ozone_yield_shock <- 1
 }
 
 
@@ -324,4 +331,41 @@ cfg <- diet(cfg = cfg)
 cfg <- prod(cfg = cfg)
 cfg <- waste(cfg = cfg)
 cfg <- rcp26(cfg = cfg)
+start_run(cfg, codeCheck = FALSE)
+
+# OZBAU #
+# Business as usual scenario based on SSP2
+# with a higher climate impact reflected by RCP 7.0
+cfg$title <- "OZBAU"
+# standard setting
+cfg <- setScenario(cfg, c("cc", "SSP2", "NPI"))
+# scenario settings
+cfg <- bau(cfg = cfg)
+cfg <- ozoneShock(cfg = cfg)
+start_run(cfg, codeCheck = FALSE)
+
+# OZBAU_RCP26 #
+# Apply lower climate impacts based on RCP 2.6 to BAU
+# Apply Ozone shocks to crop yields.
+cfg$title <- "OZBAU_RCP26"
+# standard setting
+cfg <- setScenario(cfg, c("cc", "SSP2", "NPI"))
+# scenario settings
+cfg <- bau(cfg = cfg)
+cfg <- rcp26(cfg = cfg)
+cfg <- ozoneShock(cfg = cfg)
+start_run(cfg, codeCheck = FALSE)
+
+# OZBAU_MITI_RCP26 #
+# Apply lower climate impacts based on RCP 2.6 to BAU
+# Adds mitigation and land-use policies consistent with 1.5C by 2050 to BAU
+# Apply Ozone shocks to crop yields.
+cfg$title <- "OZBAU_MITI_RCP26"
+# standard setting
+cfg <- setScenario(cfg, c("cc", "SSP2", "NPI"))
+# scenario settings
+cfg <- bau(cfg = cfg)
+cfg <- miti(cfg = cfg)
+cfg <- rcp26(cfg = cfg)
+cfg <- ozoneShock(cfg = cfg)
 start_run(cfg, codeCheck = FALSE)
