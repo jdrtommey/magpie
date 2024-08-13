@@ -6,17 +6,18 @@
 # |  Contact: magpie@pik-potsdam.de
 
 # --------------------------------------------------------------
-# description: Merges report.mif files from several runs into a single mif file
-# comparison script: TRUE
-# position: 3
+# description: checks variables for constraint violations
+# comparison script: FALSE
 # ---------------------------------------------------------------
 
+#########################
+#### check obb ####
+#########################
 # Version 1.0, Florian Humpenoeder
 #
+library(gdx2)
 library(lucode2)
 library(magclass)
-library(quitte)
-library(gms)
 
 options(error=function()traceback(2))
 
@@ -29,25 +30,26 @@ if(!exists("source_include")) {
 ###############################################################################
 cat("\nStarting output generation\n")
 
-missing <- NULL
-out <- NULL
-
-if(file.exists("output/report_all.rds")) file.rename("output/report_all.rds","output/report_all_bak.rds")
-if(file.exists("output/report_all.mif")) file.rename("output/report_all.mif","output/report_all_bak.mif")
 
 for (i in 1:length(outputdir)) {
   print(paste("Processing",outputdir[i]))
-  rep<-file.path(outputdir[i],"report.rds")
-  if(file.exists(rep)) {
-    a <- readRDS(rep)
-    out <- rbind(out,a)
-  } else missing <- c(missing,outputdir[i])
-}
-
-saveRDS(out,file="output/report_all.rds")
-write.mif(out,"output/report_all.mif")
-
-if (!is.null(missing)) {
-  cat("\nList of folders with missing report.mif\n")
-  print(missing)
+  gdx<-file.path(outputdir[i],"fulldata.gdx")
+  if(file.exists(gdx)) {
+    x <- readGDX(gdx, "ov*", types="parameters", field = "All")
+    for(i in names(x)) {
+      print(i)
+      try(z <- where(x[[i]][,,"level"] < x[[i]][,,"lower"] | x[[i]][,,"level"] > x[[i]][,,"upper"])$true, silent = TRUE)
+      if(exists("z")) {
+        if (length(z$individual) > 0) {
+          for (r in z$regions) {
+            for (y in z$years) {
+              print(paste(i,r,y))
+              print(x[[i]][r,y,])
+            }
+          }
+        }
+        rm(z)
+      }
+    }
+  }
 }
