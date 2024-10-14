@@ -10,9 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **config** changed default input data to use 2017USD
 - **module_documentation** all references to USD05 changed to USD17
 - **scripts** REMIND coupling reads data in US$2017, not US$2005
+- **scripts** project_EAT2p0 updated to include additional ozone runs
 
 ### added
--
+- **14_yields** aded option for applying a yield shock based on ozone levels
 
 ### removed
 -
